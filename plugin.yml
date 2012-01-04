@@ -1,0 +1,8 @@
+name: Tokens
+main: no.brisner.Tokens.Tokens
+version: 0.1
+commands:
+  tokens:
+      description: Main command
+  donate:
+      description: Donating command
