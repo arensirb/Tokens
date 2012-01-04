@@ -1,8 +1,10 @@
-name: Tokens
-main: no.brisner.Tokens.Tokens
+name: MineTime
+main: no.brisner.minetime.main
 version: 0.1
 commands:
   tokens:
       description: Main command
   donate:
       description: Donating command
+  password:
+      description: Make me member command
