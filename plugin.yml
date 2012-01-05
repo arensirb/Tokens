@@ -1,5 +1,5 @@
 name: MineTime
-main: no.brisner.minetime.main
+main: no.brisner.minetime.Minetime
 version: 0.1
 commands:
   tokens:
