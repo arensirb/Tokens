@@ -7,9 +7,10 @@ import no.brisner.minetime.PropertiesFile;
 public class Settings {
 	public static String mysqlUser = "root";
 	public static String mysqlPass = "root";
-	public static String mysqlDB = "jdbc:mysql://localhost:3306/minecraft";
-	public static String mysqlTable = "pcsdata";
-	public static String sqlEngine;
+	public static String mysqlHost = "127.0.0.1";
+	public static String mysqlDB = "minetime";
+	public static String mysqlPort = "3306";
+
 
 
 	public static void initialize(File dataFolder) {
