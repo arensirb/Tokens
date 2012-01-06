@@ -7,7 +7,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Logger;
+
+/**
+ * 
+ * @author Andreas Brisner aka arensirb
+ *
+ */
 
 public class MySQL {
 	
@@ -28,6 +33,14 @@ public class MySQL {
 	private String password = "";
 	private String database = "minecraft";
 	
+	/**
+	 *
+	 * @param hostname Host of database server
+	 * @param portnmbr Port of database server
+	 * @param database Database on server
+	 * @param username Username for database server
+	 * @param password Password for database server
+	 */
 	public MySQL(String hostname,
 			 String portnmbr,
 			 String database,
@@ -40,8 +53,7 @@ public class MySQL {
 	this.password = password;
 }
 
-	public Boolean initialize() {		
-		System.out.print("test");
+	public boolean initialize() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver"); // Check that server's Java has MySQL support.
 			return true;
@@ -49,20 +61,50 @@ public class MySQL {
 	    	return false;
 	    }
 	}
-	public void open() {
-		try {
-			String url = String.format("jdbc:mysql://%s:%s/%s",hostname,port,database);
-			conn = DriverManager.getConnection(url,username,password);
-		} catch ( SQLException e) {
-			e.printStackTrace();
-		}
+	/**
+	 * 
+	 * @return Attempt to open a new connection.
+	 * 
+	 */
+	public boolean open() {
+		if(initialize()) {
+			try {
+				String url = String.format("jdbc:mysql://%s:%s/%s",hostname,port,database);
+				Minetime.log.info("URL IS: " + url);
+				Minetime.log.info("Username: "+ username);
+				Minetime.log.info("Password: "+ password);
+			
+				conn = DriverManager.getConnection(url,username,password);
+				return true;
+			} catch ( SQLException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}	
+		return false;
 	}
-	public void close() {
+	/**
+	 * 
+	 * @return Attempt to close an open connection
+	 */
+	public boolean close() {
 		try {
 			conn.close();
+			return true;
+		} catch ( SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	
+	public void prepare(String sql) {
+		try {
+			ps = conn.prepareStatement(sql);
 		} catch ( SQLException e) {
 			e.printStackTrace();
 		}
+				
 	}
 	public void setString(int index, String string) {
 		try {
@@ -78,14 +120,8 @@ public class MySQL {
 			e.printStackTrace();
 		}
 	}
-	public void prepare(String sql) {
-		try {
-			ps = conn.prepareStatement(sql);
-		} catch ( SQLException e) {
-			e.printStackTrace();
-		}
-				
-	}
+	
+	
 	public void query() {
 		try{
 			rs = ps.executeQuery();
@@ -93,26 +129,39 @@ public class MySQL {
 			e.printStackTrace();
 		}
 	}
-	public void query(String sql) {
+	public int queryUpdate() {
+		try {
+			return ps.executeUpdate();
+		} catch ( SQLException e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+	public boolean query(String sql) {
 		try {
 			switch (this.getStatement(sql)) {
 		    case SELECT:
 			    rs = stmt.executeQuery(sql);
+			    return true;
 		    
 		    default:
 		    	stmt.executeUpdate(sql);
+		    	return true;
 	    }
-			rs = stmt.executeQuery(sql);
 		} catch ( SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
 		
 	}
-	public void next() {
+	
+	public boolean next() {
 		try {
 			rs.next();
+			return true;
 		} catch ( SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 	public void getColumn(String columnLabel) {
@@ -123,7 +172,22 @@ public class MySQL {
 		}
 		
 	}	
-	public Boolean checkTable(String table) {
+	public void getArray(String columnLabel) {
+		try{
+			rs.getArray(columnLabel);
+		} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	public void getInt(String columnLabel) {
+		try {
+			rs.getInt(columnLabel);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean checkTable(String table) {
 		try {
 			dbm = conn.getMetaData();
 			rs = dbm.getTables(null, null, table, null);
