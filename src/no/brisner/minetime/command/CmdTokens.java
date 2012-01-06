@@ -29,7 +29,6 @@ public class CmdTokens implements CommandExecutor{
 		try {
 			String[] split = args;
 			String commandName = command.getName().toLowerCase();
-			MySQL mysql = Minetime.mysql;
 			if("tokens".equals(commandName)) {
 				if(split.length >= 1) {
 					if("shop".equals(split[0])) {
@@ -39,10 +38,10 @@ public class CmdTokens implements CommandExecutor{
 					}
 				} else {
 					// Show users donation/token info
-						if(mysql.checkConnection()) {
-						mysql.query(sql);
+						//if(mysql.checkConnection()) {
+						//mysql.query(sql);
 						//sender.sendMessage(pm + msg.format("Donated so far: [%1$]. Tokens: [%2]",var1, var2));
-					}
+					//}
 				}
 			}
 		} catch (Exception e) {

@@ -5,11 +5,11 @@ import java.io.File;
 import no.brisner.minetime.PropertiesFile;
 
 public class Settings {
-	public static String mysqlUser = "root";
-	public static String mysqlPass = "root";
-	public static String mysqlHost = "127.0.0.1";
-	public static String mysqlDB = "minetime";
-	public static String mysqlPort = "3306";
+	public static String mysqlUser;
+	public static String mysqlPass;
+	public static String mysqlHost;
+	public static String mysqlDB;
+	public static String mysqlPort;
 
 
 

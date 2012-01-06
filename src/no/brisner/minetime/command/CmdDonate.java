@@ -22,7 +22,6 @@ public class CmdDonate implements CommandExecutor {
 		try {
 			String[] split = args;
 			String commandName = command.getName().toLowerCase();
-			MySQL mysql = Minetime.mysql;
 			if("donate".equals(commandName) && sender != null) {
 				if(split.length >= 1) {
 					if("status".equals(split[0])) {

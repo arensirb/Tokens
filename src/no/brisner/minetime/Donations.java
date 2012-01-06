@@ -7,7 +7,7 @@ import no.brisner.minetime.Settings;
 
 public class Donations {
 	
-	MySQL mysql = Minetime.mysql;
+	//MySQL mysql = Minetime.mysql;
 	
 	public void getDonations(String player) {
 		

@@ -42,6 +42,17 @@ public class Minetime extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		log.info("[MineTime] Enabling plugin");
+		if (new File("Minetime").exists()) {
+			updateSettings(getDataFolder()); // getDataFolder() returns
+		} else if (!getDataFolder().exists()) {
+			getDataFolder().mkdirs();
+		}
+		Settings.initialize(getDataFolder());
+		log.info("[MineTime][Settings] Loaded!");
+		
+		Minetime.log.info("AFterinitHostame is:" + Settings.mysqlHost);
+		initMySQL();
+		setupMySQL();
 		
 		PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
@@ -50,27 +61,29 @@ public class Minetime extends JavaPlugin {
 		getCommand("donate").setExecutor(new CmdDonate());
 		getCommand("tokens").setExecutor(new CmdTokens());
 		
-		if (new File("Tokens").exists()) {
-			updateSettings(getDataFolder()); // getDataFolder() returns
-		} else if (!getDataFolder().exists()) {
-			getDataFolder().mkdirs();
-		}
-		Settings.initialize(getDataFolder());
-		setupMySQL();
+		
 	}
-	
+	public boolean initMySQL() {
+		try {
+			Class.forName("com.mysql.jdbc.Driver"); // Check that server's Java has MySQL support.
+			return true;
+	    } catch (ClassNotFoundException e) {
+	    	e.printStackTrace();
+	    	return false;
+	    }
+	}
 	public boolean setupMySQL() {
 		mysql = new MySQL(Minetime.log, "[Minetime]", Settings.mysqlHost , Settings.mysqlPort, Settings.mysqlDB, Settings.mysqlUser, Settings.mysqlPass);
-		if(mysql.checkConnection()) {
+		if(!mysql.checkConnection()) {
+			mysql.getConnection();
+		} else {
 			log.info(premessage + "MySQL connection OK.");
 			if(!mysql.checkTable("votifier")) {
 				log.info("Table votifier does not exist.");
 			}
 			return true;
-		} else {
-			log.severe(premessage + "Error during MySQL initialization");
-			return false;
-		}
+		} 
+		return false;
 	}
 
 	public void onDisable() {
@@ -82,7 +95,7 @@ public class Minetime extends JavaPlugin {
 	}
 
 	private void updateSettings(File dataFolder) {
-		File oldDirectory = new File("PrikkSystem");
+		File oldDirectory = new File("Minetime");
 		dataFolder.getParentFile().mkdirs();
 		oldDirectory.renameTo(dataFolder);
 	}
