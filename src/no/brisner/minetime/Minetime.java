@@ -16,19 +16,24 @@ import no.brisner.minetime.Settings;
 import no.brisner.minetime.command.CmdDonate;
 import no.brisner.minetime.command.CmdPassword;
 import no.brisner.minetime.command.CmdTokens;
+import no.brisner.minetime.listeners.MinetimePlayerListener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.Event;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Minetime extends JavaPlugin {
 
 	Properties props = new Properties();
 	
-	public MySQL mysql;
+	public static MySQL mysql;
 	public static final Logger log = Logger.getLogger("Tokens");
+	
+	private final MinetimePlayerListener playerListener = new MinetimePlayerListener(this);
 
 	// public final String name = this.getDescription().getName();
 	// public final String version = this.getDescription().getVersion();
@@ -37,6 +42,9 @@ public class Minetime extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		log.info("[MineTime] Enabling plugin");
+		
+		PluginManager pm = this.getServer().getPluginManager();
+		pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
 		
 		getCommand("password").setExecutor(new CmdPassword());
 		getCommand("donate").setExecutor(new CmdDonate());
@@ -56,8 +64,7 @@ public class Minetime extends JavaPlugin {
 		if(mysql.checkConnection()) {
 			log.info(premessage + "MySQL connection OK.");
 			if(!mysql.checkTable("votifier")) {
-				String table_test = "0";
-				mysql.createTable(table_test);
+				log.info("Table votifier does not exist.");
 			}
 			return true;
 		} else {

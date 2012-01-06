@@ -1,5 +1,6 @@
 package no.brisner.minetime.command;
 
+import lib.PatPeter.SQLibrary.MySQL;
 import no.brisner.minetime.Donations;
 import no.brisner.minetime.Minetime;
 
@@ -14,18 +15,19 @@ import org.bukkit.command.CommandSender;
 public class CmdDonate implements CommandExecutor {
 	
 	public final static String premessage = ChatColor.RED + "[" + ChatColor.GREEN +  "MineTime" + ChatColor.RED +  "] "  + ChatColor.WHITE;
+	String msg;
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,	String commandLabel, String[] args) {
 		try {
 			String[] split = args;
 			String commandName = command.getName().toLowerCase();
-			
-			if("donate".equals(commandName)) {
+			MySQL mysql = Minetime.mysql;
+			if("donate".equals(commandName) && sender != null) {
 				if(split.length >= 1) {
 					if("status".equals(split[0])) {
 						Donations Donation = new Donations();
-						sender.sendMessage(premessage + "Donated so far: [0$]. Tokens: [10]");
+						//sender.sendMessage(premessage + msg.format("Donated so far: [%1 $]. Tokens: [%2]", var1, var2);
 					}
 				} else {
 					sender.sendMessage(premessage + "Visit http://www.minetime.no/ and press donate");

@@ -23,10 +23,12 @@ public class Settings {
 
 	private static void loadPropertiesFiles(File dataFolder) {
 	    //Use Configuration once it's finished.
-	    PropertiesFile pf = new PropertiesFile(new File(dataFolder, "Tokens.conf"));
+	    PropertiesFile pf = new PropertiesFile(new File(dataFolder, "Minetime.conf"));
 		mysqlUser = pf.getString("mysqlUser", "root", "Username for MySQL");
 		mysqlPass = pf.getString("mysqlPass", "root", "Password for MySQL)");
-		mysqlDB = pf.getString("mysqlDB", "jdbc:mysql://localhost:3306/minecraft", "Connection for MySQL");
+		mysqlHost = pf.getString("mysqlHost", "127.0.0.1", "Hostname to MySQL server");
+		mysqlDB = pf.getString("mysqlDB", "minetime", "MySQL database name");
+		mysqlPort = pf.getString("mysqlPort", "3306", "Your MySQL servers port");
 		pf.save();
 	}
 }
