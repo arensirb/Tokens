@@ -14,16 +14,17 @@ public class MinetimePlayerListener extends PlayerListener {
 	public MinetimePlayerListener(Minetime instance) {
 	    plugin = instance;
 	}
-	private static Settings settings = Minetime.settings;
-	private MySQL mysql = new MySQL(Settings.mysqlHost,Settings.mysqlPort, Settings.mysqlDB, Settings.mysqlUser, Settings.mysqlPass);
 	public Minetime plugin;
+	private MySQL mysql;
 	String sql;
 	
 	
 	public void onPlayerJoin(PlayerJoinEvent event){
+		mysql = new MySQL(Settings.mysqlHost,Settings.mysqlPort, Settings.mysqlDB, Settings.mysqlUser, Settings.mysqlPass);
 		String playerName = event.getPlayer().getName();
+		Minetime.log.info("Player joining: " + playerName);
 		ResultSet rs;
-		Minetime.log.info("Hosntame is:" + Settings.mysqlHost);
+		Minetime.log.info("Hostname is:" + Settings.mysqlHost);
 		if(mysql.open())
 		{
 			if(!mysql.checkTable("mt_players")) {
@@ -32,10 +33,10 @@ public class MinetimePlayerListener extends PlayerListener {
 					Minetime.log.severe("Error creating table mt_players!");
 				}
 			}
-			//sql = "SELECT id FROM mt_players WHERE name = '" + playerName + "'";	// Check if player exists
+			sql = "SELECT id FROM mt_players WHERE name = '" + playerName + "'";	// Check if player exists
 			 if(mysql.query(sql)) {
 				 if(mysql.next()) {
-					 mysql.prepare("INSERT INTO mt_players (name) VALUES ('?')");
+					 mysql.prepare("INSERT INTO mt_players (name) VALUES (?)");
 					 mysql.setString(1,playerName);
 					 mysql.queryUpdate();
 				 }

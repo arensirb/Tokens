@@ -138,9 +138,12 @@ public class MySQL {
 		}
 	}
 	public boolean query(String sql) {
+		Minetime.log.info("String: " + sql);
 		try {
+			stmt = conn.createStatement();
 			switch (this.getStatement(sql)) {
 		    case SELECT:
+		    	Minetime.log.info("String: " + sql);
 			    rs = stmt.executeQuery(sql);
 			    return true;
 		    
